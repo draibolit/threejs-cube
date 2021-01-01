@@ -3,6 +3,7 @@ import * as THREE from "three";
 import { initLight } from "../public/helpers";
 import { STLLoader } from "three/examples/jsm/loaders/STLLoader";
 import { TrackballControls } from "three/examples/jsm/controls/TrackballControls";
+import { GUI } from "three/examples/jsm/libs/dat.gui.module.js";
 
 let renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);

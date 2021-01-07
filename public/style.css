@@ -1,9 +1,11 @@
-body : {
-  margin: 0;
+#maincanvas {
+    position: absolute;
+    z-index: 8;    /* position this canvas at bottom of the other one */
 }
 
-canvas : {
-  margin: 0;
-  width: 100%;;
-  height: 100vh;
+#cubecanvas {
+    position: absolute;
+    bottom: 15px;
+    right: 15px;
+    z-index: 10;      /* position this canvas on top of the other one */
 }

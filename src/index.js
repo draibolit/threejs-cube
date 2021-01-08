@@ -33,10 +33,13 @@ let mainCamera = new THREE.PerspectiveCamera(
 mainCamera.position.set(0, 2, 5);
 let mainCameraCtrl = new OrbitControls(mainCamera, mainRenderer.domElement);
 
+// Helpers
 const gridSize = 100;
 const divisions = 10;
 const gridHelper = new THREE.GridHelper( gridSize, divisions );
 mainScene.add( gridHelper );
+const axesHelper = new THREE.AxesHelper( 5 );
+mainScene.add( axesHelper );
 
 
 // Cube
@@ -79,9 +82,11 @@ cubeRenderer.domElement.onmousemove = function(evt) {
   let mouse = new THREE.Vector2(x / size.width * 2 - 1, -y / size.height * 2 + 1);
   let raycaster = new THREE.Raycaster();
   raycaster.setFromCamera(mouse, cubeCamera);
-  let intersects = raycaster.intersectObjects(cube.planes.concat(cube.cube));
+  // let intersects = raycaster.intersectObjects(cube.planes.concat(cube.cube));
+  let intersects = raycaster.intersectObjects(cube.planes);
   if (intersects.length > 0 && intersects[0].object != cube) {
     activePlane = intersects[0].object;
+    // console.log("activePlane:",activePlane);
     activePlane.material.opacity = 0.2;
     activePlane.material.needsUpdate = true;
   }
@@ -91,11 +96,13 @@ cubeRenderer.domElement.onclick = function(evt) {
   let distance = mainCamera.position.clone().sub(mainCameraCtrl.target).length();
   newPosition.copy(mainCameraCtrl.target);
 
+  console.log("activePlane.position.x:",activePlane.position.x);
+  console.log("activePlane.position.y:",activePlane.position.y);
   if (activePlane.position.x !== 0) {
+
     newPosition.x += activePlane.position.x < 0 ? -distance : distance;
   } else if (activePlane.position.y !== 0) {
     newPosition.y += activePlane.position.y < 0 ? -distance : distance;
-
     newPosition.z += activePlane.position.z < 0 ? -distance : distance;
   }
   mainCamera.position.copy(newPosition);
@@ -119,3 +126,5 @@ function updateCubeCamera() {
   let dir = mainCamera.position.clone().sub(mainCameraCtrl.target).normalize();
   cubeCamera.position.copy(dir.multiplyScalar(cubeCameraDistance));
 }
+
+// TODO: Fix error locking at front and back plane <08-01-21, Tuan Nguyen Anh> //

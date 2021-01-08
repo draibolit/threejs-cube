@@ -8,4 +8,5 @@
     bottom: 15px;
     right: 15px;
     z-index: 10;      /* position this canvas on top of the other one */
+    opacity: 0.5;
 }

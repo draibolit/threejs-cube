@@ -1,15 +1,15 @@
 "use strict";
 import * as THREE from "three";
 import { initLight } from "../public/helpers";
-import { STLLoader } from "three/examples/jsm/loaders/STLLoader";
-import { TrackballControls } from "three/examples/jsm/controls/TrackballControls";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
-import { GUI } from "three/examples/jsm/libs/dat.gui.module.js";
 
 import { Cube } from "./cube";
 
 let cameraAngle = 60;
 let cubeCameraDistance = 1.75;
+let activePlane = null;
+let newPosition = new THREE.Vector3();
+
 
 // Main
 let mainCanvasContainer = document.getElementById("maincanvas");
@@ -66,16 +66,50 @@ let cube = new Cube(cubeScene);
 
 animate();
 
+// Highlight cube planes
+cubeRenderer.domElement.onmousemove = function(evt) {
+  if (activePlane) {
+    activePlane.material.opacity = 0;
+    activePlane.material.needsUpdate = true;
+    activePlane = null;
+  }
+  let x = evt.offsetX;
+  let y = evt.offsetY;
+  let size = cubeRenderer.getSize(new THREE.Vector2());
+  let mouse = new THREE.Vector2(x / size.width * 2 - 1, -y / size.height * 2 + 1);
+  let raycaster = new THREE.Raycaster();
+  raycaster.setFromCamera(mouse, cubeCamera);
+  let intersects = raycaster.intersectObjects(cube.planes.concat(cube.cube));
+  if (intersects.length > 0 && intersects[0].object != cube) {
+    activePlane = intersects[0].object;
+    activePlane.material.opacity = 0.2;
+    activePlane.material.needsUpdate = true;
+  }
+}
+
+cubeRenderer.domElement.onclick = function(evt) {
+  let distance = mainCamera.position.clone().sub(mainCameraCtrl.target).length();
+  newPosition.copy(mainCameraCtrl.target);
+
+  if (activePlane.position.x !== 0) {
+    newPosition.x += activePlane.position.x < 0 ? -distance : distance;
+  } else if (activePlane.position.y !== 0) {
+    newPosition.y += activePlane.position.y < 0 ? -distance : distance;
+
+    newPosition.z += activePlane.position.z < 0 ? -distance : distance;
+  }
+  mainCamera.position.copy(newPosition);
+}
+
+
 function animate() {
+  updateCubeCamera();
+  cubeRenderer.render(cubeScene, cubeCamera);
+
   mainCameraCtrl.update();
   mainCamera.updateProjectionMatrix();
   mainRenderer.render(mainScene, mainCamera);
 
-  cubeCameraCtrl.update();
-  cubeCamera.updateProjectionMatrix();
-  cubeRenderer.render(cubeScene, cubeCamera);
-
-  updateCubeCamera();
 
   requestAnimationFrame(animate);
 }

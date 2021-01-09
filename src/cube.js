@@ -53,35 +53,35 @@ class Cube {
     let planeSize = 0.7;
     let planeGeometry = new THREE.PlaneGeometry(planeSize, planeSize);
 
-    let a = 0.51;
+    let offset = 0.51;
 
     let plane1 = new THREE.Mesh(planeGeometry, planeMaterial.clone());
-    plane1.position.z = a;
-    planes.push(plane1);
+    plane1.position.z = offset;
+    planes.push(plane1); //front
 
     let plane2 = new THREE.Mesh(planeGeometry, planeMaterial.clone());
-    plane2.position.z = -a;
-    planes.push(plane2);
+    plane2.position.z = -offset;
+    planes.push(plane2); //back
 
     let plane3 = new THREE.Mesh(planeGeometry, planeMaterial.clone());
     plane3.rotation.y = Math.PI / 2;
-    plane3.position.x = a;
-    planes.push(plane3);
+    plane3.position.x = offset;
+    planes.push(plane3); //right
 
     let plane4 = new THREE.Mesh(planeGeometry, planeMaterial.clone());
     plane4.rotation.y = Math.PI / 2;
-    plane4.position.x = -a;
-    planes.push(plane4);
+    plane4.position.x = -offset;
+    planes.push(plane4); // left
 
     let plane5 = new THREE.Mesh(planeGeometry, planeMaterial.clone());
     plane5.rotation.x = Math.PI / 2;
-    plane5.position.y = a;
-    planes.push(plane5);
+    plane5.position.y = offset;
+    planes.push(plane5); //top
 
     let plane6 = new THREE.Mesh(planeGeometry, planeMaterial.clone());
     plane6.rotation.x = Math.PI / 2;
-    plane6.position.y = -a;
-    planes.push(plane6);
+    plane6.position.y = -offset;
+    planes.push(plane6); // bottom
 
     plane1.name = "plane1";
     plane2.name = "plane2";

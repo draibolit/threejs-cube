@@ -93,18 +93,24 @@ cubeRenderer.domElement.onmousemove = function(evt) {
 }
 
 cubeRenderer.domElement.onclick = function(evt) {
-  let distance = mainCamera.position.clone().sub(mainCameraCtrl.target).length();
-  newPosition.copy(mainCameraCtrl.target);
 
-  console.log("activePlane.position.x:",activePlane.position.x);
-  console.log("activePlane.position.y:",activePlane.position.y);
+		if (!activePlane) {
+			return false;
+		}
+
+  let distance = mainCamera.position.clone().sub(mainCameraCtrl.target).length(); //distance from mainCamera to target
+  newPosition.copy(mainCameraCtrl.target); // mainCamera: target position
+
   if (activePlane.position.x !== 0) {
-
     newPosition.x += activePlane.position.x < 0 ? -distance : distance;
   } else if (activePlane.position.y !== 0) {
     newPosition.y += activePlane.position.y < 0 ? -distance : distance;
     newPosition.z += activePlane.position.z < 0 ? -distance : distance;
+  } else if (activePlane.position.z !== 0) {
+    newPosition.z += activePlane.position.z < 0 ? -distance : distance;
   }
+  console.log("newPosition:",newPosition);
+
   mainCamera.position.copy(newPosition);
 }
 
@@ -126,5 +132,3 @@ function updateCubeCamera() {
   let dir = mainCamera.position.clone().sub(mainCameraCtrl.target).normalize();
   cubeCamera.position.copy(dir.multiplyScalar(cubeCameraDistance));
 }
-
-// TODO: Fix error locking at front and back plane <08-01-21, Tuan Nguyen Anh> //

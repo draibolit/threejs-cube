@@ -59,7 +59,8 @@ let cubeCamera = new THREE.PerspectiveCamera(
   1,
   100
 );
-// cubeCamera.position.set(0, 2, 1);
+
+// define this control to limit the cube camera to rotatation only
 let cubeCameraCtrl = new OrbitControls(cubeCamera, cubeRenderer.domElement);
 cubeCameraCtrl.enablePan = false;
 cubeCameraCtrl.enableZoom = false;
@@ -105,7 +106,6 @@ cubeRenderer.domElement.onclick = function(evt) {
     newPosition.x += activePlane.position.x < 0 ? -distance : distance;
   } else if (activePlane.position.y !== 0) {
     newPosition.y += activePlane.position.y < 0 ? -distance : distance;
-    newPosition.z += activePlane.position.z < 0 ? -distance : distance;
   } else if (activePlane.position.z !== 0) {
     newPosition.z += activePlane.position.z < 0 ? -distance : distance;
   }
@@ -132,3 +132,5 @@ function updateCubeCamera() {
   let dir = mainCamera.position.clone().sub(mainCameraCtrl.target).normalize();
   cubeCamera.position.copy(dir.multiplyScalar(cubeCameraDistance));
 }
+
+// TODO: rotate cubecamera even in drag motion of mouse <10-01-21, Tuan Nguyen Anh> //
